@@ -418,4 +418,290 @@ function typeSegments(el, segs, speed, done) {
       setTimeout(nextChar, speed + (Math.random()*18 - 9));
     } else {
       si++; ci = 0; activeNode = null;
-      set
+      setTimeout(nextChar, speed);
+    }
+  }
+
+  nextChar();
+}
+
+/* convenience: type a plain string */
+function typeStr(el, str, speed, done) {
+  typeSegments(el, [{t: str}], speed, done);
+}
+
+
+/* ════════════════════════════════════════
+   FLOW
+════════════════════════════════════════ */
+var sendDone = null;   // callback waiting for send tap
+var sendTimer = null;
+
+function startShow() {
+  /* reset everything */
+  dateActive = false;
+  var secs = document.querySelectorAll(".sec");
+  for (var i = 0; i < secs.length; i++) {
+    secs[i].classList.remove("on");
+  }
+  var ids = ["s1t","s1s","s2t","s3t","l1","l2","l3","l4","l5","l6","s5t","s5b","s7q","stamp"];
+  for (var j = 0; j < ids.length; j++) {
+    var e = document.getElementById(ids[j]);
+    if (e) { e.innerHTML = ""; e._live = false; }
+  }
+  document.getElementById("s1s").classList.remove("show");
+  document.getElementById("sendRow").classList.remove("show");
+  document.getElementById("sendBtn").classList.remove("pressed");
+  document.getElementById("sendBtn").disabled = false;
+  document.getElementById("propBtns").classList.remove("show");
+  document.querySelectorAll("#s4 .line").forEach(function(l){ l.classList.remove("dim"); });
+  document.querySelectorAll("#s6 svg").forEach(function(d){ d.classList.remove("pop"); });
+  document.querySelectorAll("#s8 p").forEach(function(p){ p.classList.remove("show"); });
+
+  if (sendTimer) { clearTimeout(sendTimer); sendTimer = null; }
+  sendDone = null;
+
+  /* kick off */
+  setTimeout(step1, 400);
+}
+
+/* S1: Hey, Maryeth */
+function step1() {
+  showSec("s1");
+  setTimeout(function() {
+    typeSegments(
+      document.getElementById("s1t"),
+      [{t:"Hey,\u00a0"}, {h:"Maryeth"}],
+      58,
+      function() {
+        setTimeout(function() {
+          document.getElementById("s1s").classList.add("show");
+          setTimeout(function() {
+            hideSec("s1", step2);
+          }, 2400);
+        }, 500);
+      }
+    );
+  }, 600);
+}
+
+/* S2: date */
+function step2() {
+  showSec("s2");
+  setTimeout(function() {
+    var el = document.getElementById("s2t");
+    typeStr(el, "Sekarang\u00a0", 60, function() {
+      el._live = true;
+      dateActive = true;
+      el.innerHTML = "Sekarang\u00a0<b>"+nowStr()+"</b>";
+      setTimeout(function() {
+        hideSec("s2", step3);
+      }, 2600);
+    });
+  }, 500);
+}
+
+/* S3: chat bubble */
+function step3() {
+  showSec("s3");
+  setTimeout(function() {
+    typeStr(
+      document.getElementById("s3t"),
+      "Gua merasa cocok sama lu, gua pengen kita mulai blah blah and blah blah...",
+      48,
+      function() {
+        setTimeout(function() {
+          document.getElementById("sendRow").classList.add("show");
+          /* wait for tap, or auto after 7s */
+          sendDone = afterSend;
+          sendTimer = setTimeout(function() {
+            triggerSend();
+          }, 7000);
+        }, 400);
+      }
+    );
+  }, 700);
+}
+ 
+function doSend() {
+  if (sendTimer) { clearTimeout(sendTimer); sendTimer = null; }
+  triggerSend();
+}
+
+function triggerSend() {
+  var btn = document.getElementById("sendBtn");
+  btn.disabled = true;
+  btn.classList.add("pressed");
+  setTimeout(function() {
+    hideSec("s3", function() {
+      if (sendDone) { var cb = sendDone; sendDone = null; cb(); }
+    });
+  }, 500);
+}
+
+function afterSend() {
+  step4();
+}
+
+/* S4: build-up */
+function step4() {
+  showSec("s4");
+
+  var queue = [
+    { el:"l1", segs:[{t:"That's what I was going to do."}]            },
+    { el:"l2", segs:[{t:"But then I stopped."}]                       },
+    { el:"l3", segs:[{t:"I realised, I wanted to do something\u00a0"},{b:"special"},{t:"."}] },
+    { el:"l4", segs:[{t:"Because,"}]                                  },
+    { el:"l5", segs:[{t:"You are Special\u00a0\u00a0:)"}]             },
+    { el:"l6", segs:[{h:"SO"}], so:true                               }
+  ];
+
+  var qi = 0;
+  function nextLine() {
+    if (qi >= queue.length) {
+      /* dim first 4, linger, fade out */
+      setTimeout(function() {
+        ["l1","l2","l3","l4"].forEach(function(id){
+          document.getElementById(id).classList.add("dim");
+        });
+        setTimeout(function() {
+          hideSec("s4", step5);
+        }, 1600);
+      }, 900);
+      return;
+    } 
+    var cfg = queue[qi]; qi++;
+    var el = document.getElementById(cfg.el);
+    typeSegments(el, cfg.segs, 56, function() {
+      setTimeout(nextLine, 420);
+    });
+  }
+  setTimeout(nextLine, 400);
+}
+
+/* S5: wish */
+function step5() {
+  showSec("s5");
+  setTimeout(function() {
+    typeStr(document.getElementById("s5t"), "I love you, Maryeth!", 55, function() {
+      setTimeout(function() {
+        typeSegments(
+          document.getElementById("s5b"),
+          [{t:"Gua udah mikirin ini lama banget,"},{br:true},{t:"dan akhirnya gua berani buat bilang..."}],
+          62,
+          function() {
+            setTimeout(function() {
+              hideSec("s5", stepDots);
+            }, 2400);
+          }
+        );
+      }, 600);
+    });
+  }, 500);
+}
+
+/* dots */
+function stepDots() {
+  showSec("s6");
+  var dots = document.querySelectorAll("#s6 svg");
+  var di = 0;
+  function popNext() {
+    if (di < dots.length) {
+      dots[di].classList.add("pop");
+      di++;
+      setTimeout(popNext, 90);
+    } else {
+      /* all in — pause — shrink out */
+      setTimeout(function() {
+        dots.forEach(function(d){
+          d.style.opacity = "0";
+          d.style.transform = "scale(0.2)";
+        });
+        setTimeout(function() {
+          hideSec("s6", step7);
+        }, 400);
+      }, 700);
+    }
+  }
+  setTimeout(popNext, 300);
+}
+
+/* S7: proposal */
+function step7() {
+  showSec("s7");
+  document.getElementById("stamp").textContent = nowStr();
+  setTimeout(function() {
+    typeSegments(
+      document.getElementById("s7q"),
+      [
+        {t:"So at\u00a0"},{b:"this date"},{t:","},
+        {br:true},{t:"would you like to"},
+        {br:true},{t:"make me yours?"}
+      ],
+      68,
+      function() {
+        setTimeout(function() {
+          document.getElementById("propBtns").classList.add("show");
+        }, 600);
+      }
+    );
+  }, 600);
+}
+
+
+/* ════════════════════════════════════════
+   PROPOSAL BUTTONS
+════════════════════════════════════════ */
+var DOUBTS = [
+  "u sure?",
+  "ade we deadass?",
+  "really bro?",
+  "come on... \uD83D\uDE4F",
+  "u sure sure?",
+  "bro PLEASE \uD83D\uDE2D",
+  "okay but really??",
+  "last chance to say yes lol",
+  "i will wait forever btw",
+  "...still no?"
+];
+var di = 0;
+
+function sayNo() {
+  di = 0;
+  document.getElementById("doubt-msg").textContent = DOUBTS[0];
+  document.getElementById("doubt").classList.add("on");
+}
+function nextDoubt() {
+  di = (di+1) % DOUBTS.length;
+  var m = document.getElementById("doubt-msg");
+  m.style.opacity = "0";
+  setTimeout(function(){
+    m.textContent = DOUBTS[di];
+    m.style.opacity = "1";
+  }, 180);
+}
+function sayYes() {
+  document.getElementById("doubt").classList.remove("on");
+  document.getElementById("happy").classList.add("on");
+}
+
+
+/* ════════════════════════════════════════
+   REPLAY
+════════════════════════════════════════ */
+document.getElementById("replay").addEventListener("click", function() {
+  document.getElementById("happy").classList.remove("on");
+  document.getElementById("doubt").classList.remove("on");
+  startShow();
+});
+
+
+/* ════════════════════════════════════════
+   BOOT
+════════════════════════════════════════ */
+window.addEventListener("load", function() {
+  startShow();
+});
+</script>
+</body>
+</html>
