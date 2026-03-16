@@ -350,7 +350,7 @@
 <!-- S1 greeting -->
 <div class="sec" id="s1">
   <p class="big" id="s1t"></p>
-  <p class="small" id="s1s">I really like your name btw!</p>
+  <p class="small" id="s1s">What are we ya?</p>
 </div>
 
 <!-- S2 date -->
@@ -488,11 +488,11 @@
 <!-- happy overlay -->
 <div id="happy">
   <p class="h-emoji">&#128149;&#127881;</p>
-  <p class="h-title">YES, I'M SO HAPPY!!</p>
+  <p class="h-title">ANJAY PACARAN MAS</p>
   <p class="h-date">at <span id="happy-date"></span><br/>we are officially partners.</p>
-  <p class="h-body">Gua ga bisa stop senyum sekarang.<br/>Makasih udah mau jadi milik gua.</p>
-  <p class="h-body">No more FWA —<br/>just us, for real this time. :)</p>
-  <p class="h-sign">— Sean</p>
+  <p class="h-body">Serius nggak sih ini.<br/>Konfirmasi ke @oWrath cuk cepet.</p>
+  <p class="h-body">Maaf ya aku bikin ini corny and cringe as hell<br/>Semoga kamu suka ya beb</p>
+  <p class="h-sign">— Sean Ganteng (@oWrath)</p>
   <button id="replay">&#8634;&nbsp;&nbsp;Watch it again</button>
 </div>
 
@@ -747,7 +747,7 @@ function step3() {
   /* ── Sean msg 1: "hey, lagi sibuk ga?" ── */
   setTimeout(function() {
     showRow("cm1");
-    typeInInput("hey, lagi sibuk ga?", 55, function() {
+    typeInInput("Beb", 55, function() {
       /* auto-send after short pause — feels like he typed it */
       setTimeout(function() {
         var inp = document.getElementById("chatInput");
@@ -764,12 +764,12 @@ function step3() {
             document.getElementById("cmTyping1").classList.remove("show");
 
             /* ── Maryeth reply 1 ── */
-            document.getElementById("cm2t").textContent = "engga, kenapa? 👀";
+            document.getElementById("cm2t").textContent = "Ya beb";
             showRow("cm2");
             setTimeout(function() {
 
               /* ── Sean msg 2 ── */
-              typeInInput("gua mau ngomong sesuatu hehe", 52, function() {
+              typeInInput("Mau ngomong serius", 52, function() {
                 setTimeout(function() {
                   var inp2 = document.getElementById("chatInput");
                   document.getElementById("cm3t").textContent = inp2.value;
@@ -785,14 +785,14 @@ function step3() {
                       document.getElementById("cmTyping2").classList.remove("show");
 
                       /* ── Maryeth reply 2 ── */
-                      document.getElementById("cm4t").textContent = "apaan 😭 spill";
+                      document.getElementById("cm4t").textContent = "Apa beb";
                       showRow("cm4");
                       setTimeout(function() {
 
                         /* ── Sean final msg — user types & sends ── */
                         document.getElementById("chatStatus").textContent = "Sean is typing...";
                         typeInInput(
-                          "gua merasa cocok sama lu, gua pengen kita mulai sesuatu yang lebih dari ini...",
+                          "Gua merasa cocok sama lu, gua pengen kita mulai sesuatu yang lebih dari ini...",
                           44,
                           function() {
                             /* show send button */
@@ -856,10 +856,10 @@ function step4() {
   var queue = [
     { el:"l1", segs:[{t:"That's what I was going to do."}]            },
     { el:"l2", segs:[{t:"But then I stopped."}]                       },
-    { el:"l3", segs:[{t:"I realised, I wanted to do something\u00a0"},{h:"special"},{t:"."}] },
+    { el:"l3", segs:[{t:"Text is not enough, I wanted to do something\u00a0"},{h:"special"},{t:"."}] },
     { el:"l4", segs:[{t:"Because,"}]                                  },
     { el:"l5", segs:[{h:"You are special, Mary :)"}]                  },
-    { el:"l6", segs:[{b:"SO"}]                                        }
+    { el:"l6", segs:[{b:"So"}]                                        }
   ];
 
   var qi = 0;
@@ -889,11 +889,11 @@ function step4() {
 function step5() {
   showSec("s5");
   setTimeout(function() {
-    typeStr(document.getElementById("s5t"), "I love you, Maryeth!", 55, function() {
+    typeStr(document.getElementById("s5t"), "I love you, Maryeth.", 55, function() {
       setTimeout(function() {
         typeSegments(
           document.getElementById("s5b"),
-          [{t:"Gua udah mikirin ini lama banget,"},{br:true},{t:"dan akhirnya gua berani buat bilang..."}],
+          [{t:"I'm sorry for rushing things,"},{br:true},{t:"gua harap ini langkah tepat karena gua takut lu diambil orang"}],
           62,
           function() {
             setTimeout(function() {
